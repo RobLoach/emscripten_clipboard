@@ -5,9 +5,17 @@ An attempt at allowing Clipboard usage through Emscripten. Due to browser permis
 ## Example
 
 ``` c
+#define EMSCRIPTEN_CLIPBOARD_IMPLEMENTATION
+#include "emscripten_clipboard.h"
+
+// Create the clipboard, and initialize it.
 emscripten_clipboard clipboard;
 emscripten_clipboard_init(&clipboard);
+
+// Set the contents of the clipboard.
 emscripten_clipboard_set(&clipboard, "Hello, World!");
+
+// Retrieve the contents. This can be iffy, due to browser permissions.
 const char* text = emscripten_clipboard_get(&clipboard);
 ```
 
