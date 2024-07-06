@@ -1,0 +1,16 @@
+{
+  "name": "emscripten_clipboard",
+  "version": "0.0.1",
+  "private": true,
+  "description": "emscripten_clipboard: Clipboard API for Emscripten.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prebuild": "mkdir -p dist",
+    "build": "emcc -o dist/index.html example/main.c",
+    "prestart": "npm run build",
+    "start": "npx -y live-server dist"
+  },
+  "author": "Rob Loach (https://robloach.net)",
+  "license": "Zlib"
+}
