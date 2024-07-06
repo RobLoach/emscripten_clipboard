@@ -5,7 +5,7 @@
   "description": "emscripten_clipboard: Clipboard API for Emscripten.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "cpplint --filter='-legal/copyright,-build/header_guard,-build/include,-whitespace/line_length' emscripten_clipboard.h",
     "prebuild": "mkdir -p dist",
     "build": "emcc -o dist/index.html example/main.c",
     "prestart": "npm run build",
