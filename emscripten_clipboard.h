@@ -91,6 +91,19 @@ EMSCRIPTEN_CLIPBOARD_API const char* emscripten_clipboard_get(emscripten_clipboa
  */
 EMSCRIPTEN_CLIPBOARD_API void emscripten_clipboard_set(emscripten_clipboard* clipboard, const char* text);
 
+/**
+ * Deinitializes a clipboard object, and unregisters the clipboard events.
+ *
+ * @code
+ * emscripten_clipboard_deinit(&clipboard);
+ * @endcode
+ *
+ * @param clipboard The clipboard object to deinitialize.
+ *
+ * @see emscripten_clipboard_init()
+ */
+EMSCRIPTEN_CLIPBOARD_API void emscripten_clipboard_deinit(emscripten_clipboard* clipboard);
+
 #endif  // EMSCRIPTEN_CLIPBOARD_H__
 
 #ifdef EMSCRIPTEN_CLIPBOARD_IMPLEMENTATION
@@ -127,8 +140,21 @@ EM_JS(void, emscripten_clipboard__register, (void* clipboard, const char* text, 
         }
         Module.HEAPU8[text + i] = 0;
     }
+    if (!Module._emscripten_clipboard_handlers) {
+        Module._emscripten_clipboard_handlers = {};
+    }
+    Module._emscripten_clipboard_handlers[clipboard] = emscripten_clipboard__change_event;
     document.addEventListener('clipboardchange', emscripten_clipboard__change_event);
     document.addEventListener('paste', emscripten_clipboard__change_event);
+})
+
+EM_JS(void, emscripten_clipboard__unregister, (void* clipboard), {
+    if (Module._emscripten_clipboard_handlers && Module._emscripten_clipboard_handlers[clipboard]) {
+        const handler = Module._emscripten_clipboard_handlers[clipboard];
+        document.removeEventListener('clipboardchange', handler);
+        document.removeEventListener('paste', handler);
+        delete Module._emscripten_clipboard_handlers[clipboard];
+    }
 })
 
 EMSCRIPTEN_CLIPBOARD_API const char* emscripten_clipboard_get(emscripten_clipboard* clipboard) {
@@ -175,6 +201,16 @@ EMSCRIPTEN_CLIPBOARD_API void emscripten_clipboard_init(emscripten_clipboard* cl
 
     // Register the clipboard events for the object.
     emscripten_clipboard__register(clipboard, clipboard->text, EMSCRIPTEN_CLIPBOARD_MAX);
+}
+
+EMSCRIPTEN_CLIPBOARD_API void emscripten_clipboard_deinit(emscripten_clipboard* clipboard) {
+    if (clipboard == NULL) {
+        return;
+    }
+
+    emscripten_clipboard__unregister(clipboard);
+    clipboard->text[0] = '\0';
+    clipboard->user_data = NULL;
 }
 
 #endif  // EMSCRIPTEN_CLIPBOARD_IMPLEMENTATION_ONCE

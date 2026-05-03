@@ -17,6 +17,9 @@ emscripten_clipboard_set(&clipboard, "Hello, World!");
 
 // Retrieve the contents. This can be iffy, due to browser permissions.
 const char* text = emscripten_clipboard_get(&clipboard);
+
+// Deinitialize the clipboard and unregister event listeners.
+emscripten_clipboard_deinit(&clipboard);
 ```
 
 ## API
@@ -25,6 +28,7 @@ const char* text = emscripten_clipboard_get(&clipboard);
 void emscripten_clipboard_init(emscripten_clipboard* clipboard);
 const char* emscripten_clipboard_get(emscripten_clipboard* clipboard);
 void emscripten_clipboard_set(emscripten_clipboard* clipboard, const char* text);
+void emscripten_clipboard_deinit(emscripten_clipboard* clipboard);
 ```
 
 ## Dependencies
