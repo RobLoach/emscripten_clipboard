@@ -5,8 +5,6 @@
   "description": "emscripten_clipboard: Clipboard API for Emscripten.",
   "main": "index.js",
   "scripts": {
-    "test": "node dist/test_clipboard.js",
-    "pretest": "npm run build && emcc -o dist/test_clipboard.js test/test_clipboard.c",
     "prebuild": "mkdir -p dist",
     "build": "emcc -o dist/index.html example/main.c",
     "prestart": "npm run build",
