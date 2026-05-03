@@ -25,6 +25,7 @@ const char* text = emscripten_clipboard_get(&clipboard);
 void emscripten_clipboard_init(emscripten_clipboard* clipboard);
 const char* emscripten_clipboard_get(emscripten_clipboard* clipboard);
 void emscripten_clipboard_set(emscripten_clipboard* clipboard, const char* text);
+void emscripten_clipboard_deinit(emscripten_clipboard* clipboard);
 ```
 
 ## Dependencies
